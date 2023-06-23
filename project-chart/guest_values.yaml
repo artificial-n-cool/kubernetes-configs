@@ -1,0 +1,23 @@
+replicaCount: 1
+image:
+  mongoVersion: latest
+  pullPolicy: IfNotPresent  # !important
+
+app:
+  name: guest
+
+storage:
+  db: mongo
+  storageSize: 100Mi
+  dbVersion: latest
+  networking:
+    servicePort: 27017
+    targetPort: 27017  # don't change this !!!
+    containerPort: 27017  # don't change this either !!!
+  mountPath: /data/db
+
+# Override not needed, but if necessary done here !!!
+api:
+  networking:
+    servicePort: 8080
+    targetPort: 8080

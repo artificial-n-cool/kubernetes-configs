@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-app
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}-app
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}-app
+          image: {{ .Values.app.name }}-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: host
+                  name: mongo-config-{{ .Values.app.name }}
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: port
+                  name: mongo-config-{{ .Values.app.name }}
+            - name: MONGO_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: database
+                  name: mongo-config-{{ .Values.app.name }}
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: mongo-secret
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: mongo-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}-app-service
+spec:
+  selector:
+    app: {{ .Values.app.name }}-app
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort

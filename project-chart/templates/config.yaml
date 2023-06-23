@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config-{{ .Values.app.name }}
+data:
+  host: "{{ .Values.app.name }}-mongo"
+  database: "{{ .Values.app.name }}-db"  # check if it auto creates
+  port: "{{ .Values.storage.networking.dbPort }}"  # 27017?

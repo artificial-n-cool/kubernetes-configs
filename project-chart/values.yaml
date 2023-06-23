@@ -1,0 +1,21 @@
+replicaCount: 1
+image:
+  mongoVersion: latest
+  pullPolicy: IfNotPresent  # !important
+
+storage:
+  db: mongo
+  storageSize: 100Mi
+  dbVersion: latest
+  networking:
+    servicePort: 27017 # I think this will work?
+    targetPort: 27017  # don't change this !!!
+    containerPort: 27017  # don't change this either !!!
+    dbPort: 27017
+  mountPath: /data/db
+
+api:
+  networking:
+    servicePort: 8080
+    targetPort: 8080
+
