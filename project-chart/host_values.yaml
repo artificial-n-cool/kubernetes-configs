@@ -19,6 +19,7 @@ storage:
 # Override not needed, but if necessary done here !!!
 api:
   networking:
+    portName: http-trafic
     servicePort: 8080
     targetPort: 8080
 
