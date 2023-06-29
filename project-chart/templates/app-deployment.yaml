@@ -25,6 +25,24 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: MANAGEMENT_SERVER_PORT
+              value: "8081"
+            - name: OTEL_METRICS_EXPORTER
+              value: none
+            - name: OTEL_TRACING_EXPORTER
+              value: otlp,logging
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://tempo-tempo-distributed-distributor.observability.svc.cluster.local:4317
+            - name: OTEL_SERVICE_NAME
+              value: {{ .Values.app.name }}-app-service  # TODO: Videti je li app-service ili samo app
+            - name: KUBE_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: app={{ .Values.app.name }}-app
             - name: MONGO_HOST
               valueFrom:
                 configMapKeyRef:
@@ -64,4 +82,4 @@ spec:
     - port: 8080
       targetPort: 8080
       name: http-traffic
-  # type: NodePort
+  type: NodePort
